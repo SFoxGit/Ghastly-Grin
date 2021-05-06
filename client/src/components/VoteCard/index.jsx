@@ -46,8 +46,10 @@ function VoteCard(props) {
               .catch(err => stopTimer())
           } else {
             stopTimer();
-            history.push('/GamePlay')
-            console.log("id and owner no match")
+            setTimeout(proceed, 1000);
+            function proceed() {
+              history.push('/GamePlay')
+            }
           }
         } else {
           stopTimer();
