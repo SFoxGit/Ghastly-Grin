@@ -22,7 +22,6 @@ router.get("/", withAuth, async (req, res) => {
 
 // Trigger on Owner clicking Game Start
 router.post("/", withAuth, async (req, res) => {
-  console.log(req.session);
   try {
     await Round.destroy({
       where: { game_id: req.session.game_id }
@@ -58,7 +57,6 @@ router.post("/", withAuth, async (req, res) => {
 
 // Must send Answer: 
 router.put("/", withAuth, async (req, res) => {
-  // console.log(req.body)
   try {
     const findRound = await Round.findOne({
       where: {
@@ -72,9 +70,6 @@ router.put("/", withAuth, async (req, res) => {
     } else {
       var usersAnswers = [req.body]
     }
-    // console.log(answersArray);
-    // const usersAnswers = await answersArray.push(req.body);
-    console.log(usersAnswers);
     const updateAnswers = await Round.update(
       {
         answers: JSON.stringify(usersAnswers)

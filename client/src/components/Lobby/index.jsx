@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import axios from "axios";
 import { useHistory } from "react-router";
+import { useSocket } from '../../utils/SocketProvider';
 
 function Lobby(props) {
   const history = useHistory();
@@ -23,6 +24,7 @@ function Lobby(props) {
   const newCard = useRef();
   const [componentMounted, setComponentMounted] = useState(true);
   const stopTime = props.stopTime;
+  const socket = useSocket();
 
   const updateGame = async (e) => {
     e.preventDefault();
@@ -61,64 +63,77 @@ function Lobby(props) {
       .catch(err => console.log("round: " + err))
   }
 
+  function testRound() {
+    socket.emit('round', game)
+  }
 
   useEffect(() => {
-    console.log("Lobby useEffect ran")
-    if (componentMounted) {
+    if(socket == null) return
+    socket.on('receive-round', function(roundData) {
+      console.log(roundData)
+    })
 
-      function stopTimer() {
-        clearInterval(timerInterval)
-      }
-      const timerInterval = setInterval(checkPlayers, 1000);
-      if (stopTime) {
-        stopTimer()
-      }
-      //CHECK HERE FOR PLAYERS NOT SHOWING
-      function checkPlayers() {
-        axios.get('/api/player', { withCredentials: true })
-          .then(res => {
-            const playerData = res.data.data;
-            const arr = []
-            playerData.forEach(element => {
-              arr.push(element.username)
-            })
-            setPlayers(arr)
-            axios.get('/api/deck', { withCredentials: true })
-              .then(res => {
-                setWhiteCards(res.data.answers)
-                axios.get('/api/game', { withCredentials: true })
-                  .then(result => {
-                    if (user === result.data.game_owner) {
-                      setOwner(true)
-                    }
-                    setRounds(result.data.round);
-                    setMaxRounds(result.data.maxrounds);
-                    setTimer(result.data.timer);
-                    if (result.data.round > 0) {
-                      stopTimer();
-                      axios.put('/api/player/hand', { withCredentials: true })
-                        .then(res => {
-                          history.push('/GamePlay')
-                        })
-                    }
-                  })
-                  .catch(err => console.log(err));
-              })
-              .catch(err => console.log(err));
-          })
-          .catch(err => stopTime());
-      }
-    }
-    return () => {
-      setComponentMounted(false)
-    }
+    return () => socket.off('receive-round')
+  }, [socket])
 
-  }, [history, setTimer, setMaxRounds, setRounds, setOwner, user, componentMounted, stopTime])
+  // useEffect(() => {
+  //   console.log("Lobby useEffect ran")
+  //   if (componentMounted) {
+
+  //     function stopTimer() {
+  //       clearInterval(timerInterval)
+  //     }
+  //     const timerInterval = setInterval(checkPlayers, 1000);
+  //     if (stopTime) {
+  //       stopTimer()
+  //     }
+  //     //CHECK HERE FOR PLAYERS NOT SHOWING
+  //     function checkPlayers() {
+  //       axios.get('/api/player', { withCredentials: true })
+  //         .then(res => {
+  //           const playerData = res.data.data;
+  //           const arr = []
+  //           playerData.forEach(element => {
+  //             arr.push(element.username)
+  //           })
+  ////           setPlayers(arr)
+  //           axios.get('/api/deck', { withCredentials: true })
+  //             .then(res => {
+  ////               setWhiteCards(res.data.answers)
+  //               axios.get('/api/game', { withCredentials: true })
+  //                 .then(result => {
+  //                   if (user === result.data.game_owner) {
+  //                     setOwner(true)
+  //                   }
+  ////                   setRounds(result.data.round);
+  ////                   setMaxRounds(result.data.maxrounds);
+  ////                   setTimer(result.data.timer);
+  //                   if (result.data.round > 0) {
+  //                     stopTimer();
+  //                     axios.put('/api/player/hand', { withCredentials: true })
+  //                       .then(res => {
+  //                         history.push('/GamePlay')
+  //                       })
+  //                   }
+  //                 })
+  //                 .catch(err => console.log(err));
+  //             })
+  //             .catch(err => console.log(err));
+  //         })
+  //         .catch(err => stopTimer());
+  //     }
+  //   }
+  //   return () => {
+  //     setComponentMounted(false)
+  //   }
+
+  // }, [history, setTimer, setMaxRounds, setRounds, setOwner, user, componentMounted, stopTime])
 
   return (
 
     <div className="lobby-page main-content">
       <div className="lobby-start">
+        <button onClick={() => testRound()}>Test</button>
         <h4 className="lob-h">Lobby: {game}</h4>
         {owner ?
           <form>

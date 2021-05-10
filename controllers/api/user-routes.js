@@ -13,7 +13,6 @@ router.get("/:id", withAuth, async (req, res, next) => {
     const formatUser = await JSON.parse(JSON.stringify(userData));
     res.send(formatUser)
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -38,7 +37,6 @@ router.post("/", async (req, res) => {
     // res.send(req.session)
     res.status(200).json(req.session);
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -81,14 +79,12 @@ router.post("/login", async (req, res) => {
       // await res.cookie("id", userID, {signed: true, httpOnly: true})
     req.session.user_id = user.id;
     req.session.loggedIn = true;
-    console.log(req.session.user_id)
     res.json(req.session)
     // res
     //   .status(200)
     //   .json({ user: dbUserData, message: "You are now logged in!" });
     // });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });

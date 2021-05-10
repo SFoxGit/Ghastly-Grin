@@ -9,16 +9,19 @@ var cookieParser = require('cookie-parser');
 var cors = require("cors");
 const httpServer = require("http").createServer(app);
 const options = { cors: { origin: "*" } };
-// const io = require("socket.io")(httpServer, options);
+const io = require("socket.io")(httpServer, options);
+const { Game, User, Player, Deck } = require("./models");
+
 
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
+const router = require('./controllers/api/user-routes');
 
 var app = express();
 
 // app.use(cors({
-//   origin: ["https://ghastlygrin.herokuapp.com/"],
+//   origin: ["http://localhost:3000/"],
 //   methods: ["GET", "POST", "PUT", "DELETE"],
 //   credentials: true
 // }));
@@ -45,38 +48,34 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, 'client/build')));
-//   app.get('*', function(req, res) {
-//     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-//   });
-// }
-
 app.use(routes);
 app.use(compression());
-// catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
+});
 
-// error handler
-// app.use(function (err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+io.on("connection", socket => {
+  const gameID = socket.handshake.query.gameID;
+  socket.join(gameID)
+  console.log("game ID: " + gameID)
+  socket.on("welcome", () => {
+    console.log("hello");
+  });
+  socket.on("round", async (gameID) => {
 
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.json({ error: err});
-// });
-
-// io.on("connection", socket => {
-//   console.log(socket.id);
-//   socket.on("welcome", () => {
-//     console.log("hello");
-//   })
-// });
-// httpServer.listen(3001);
+    const gameData = await Game.findOne({
+      where: { id: gameID }
+    })
+    const formatData = await JSON.parse(JSON.stringify(gameData))
+    console.log(formatData)
+    io.emit('receive-round', {
+      formatData
+    })
+    // res.status(200).json(formatData)
+    // .catch(err => console.log(err))
+  })
+});
+httpServer.listen(3002);
 app.use(function (req, res, next) {
   if (!req.session) {
     return next(new Error('Oh no')) //handle error
