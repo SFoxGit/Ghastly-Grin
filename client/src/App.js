@@ -15,11 +15,11 @@ import axios from 'axios';
 import HeaderMobile from "./components/HeaderMobile";
 import EndGame from "./components/EndGame";
 import Particles from "react-particles-js";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import {SocketProvider} from "./utils/SocketProvider";
 
 function App() {
-  const socket = io.connect("http://localhost:3002/");
+  // const socket = io.connect("http://localhost:3002/");
   const [loggedIn, setLoggedIn] = useState();
   const [gameID, setGameID] = useState(false);
   const [timer, setTimer] = useState();
@@ -42,8 +42,7 @@ function App() {
         }
       })
       .catch(err => console.log(err))
-    socket.emit("welcome", "connected");
-  }, [socket])
+  }, [])
 
 
   return (

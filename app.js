@@ -10,10 +10,13 @@ var cors = require("cors");
 const httpServer = require("http").createServer(app);
 const options = { cors: { origin: "*" } };
 const io = require("socket.io")(httpServer, options);
+const { Game, User, Player, Deck } = require("./models");
+
 
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
+const router = require('./controllers/api/user-routes');
 
 var app = express();
 
@@ -47,17 +50,29 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(routes);
 app.use(compression());
-app.get("*", function(req, res) {
+app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
 io.on("connection", socket => {
-  console.log(socket.id);
+  const gameID = socket.handshake.query.gameID;
+  socket.join(gameID)
+  console.log("game ID: " + gameID)
   socket.on("welcome", () => {
     console.log("hello");
   });
-  socket.on("round", () => {
-    
+  socket.on("round", async (gameID) => {
+
+    const gameData = await Game.findOne({
+      where: { id: gameID }
+    })
+    const formatData = await JSON.parse(JSON.stringify(gameData))
+    console.log(formatData)
+    io.emit('receive-round', {
+      formatData
+    })
+    // res.status(200).json(formatData)
+    // .catch(err => console.log(err))
   })
 });
 httpServer.listen(3002);

@@ -1,12 +1,14 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import "./style.css";
+
 
 function Nav(props) {
   const history = useHistory();
   const loggedIn = props.loggedIn
   const setLoggedIn = props.setLoggedIn
+
 
   const logOut = () => {
     axios.post('/api/user/logout', { withCredentials: true })
@@ -18,8 +20,6 @@ function Nav(props) {
       .catch(err => history.push('/LogSign'))
   }
 
-  useEffect(() => {
-  }, [])
   return (
     <ul className="nav nav-login">
       {loggedIn ?

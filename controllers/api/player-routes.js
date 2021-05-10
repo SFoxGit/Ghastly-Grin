@@ -60,7 +60,6 @@ router.post("/", withAuth, async (req, res) => {
 })
 
 router.put("/card", withAuth, async (req, res) => {
-  console.log(req.session);
   try {
     const findPlayer = await Player.findOne({
       where: { user_id: req.session.user_id }
