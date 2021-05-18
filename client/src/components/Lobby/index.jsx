@@ -68,13 +68,19 @@ function Lobby(props) {
   }
 
   useEffect(() => {
-    if(socket == null) return
-    socket.on('receive-round', function(roundData) {
-      console.log(roundData)
+    if (socket == null) return
+    socket.on('receive-round', function (roundData) {
+      console.log(roundData.formatData.round)
+      if (roundData.formatData.round > 0) {
+        axios.put('/api/player/hand', { withCredentials: true })
+          .then(res => {
+            history.push('/GamePlay')
+          })
+      }
     })
 
     return () => socket.off('receive-round')
-  }, [socket])
+  }, [socket, history])
 
   // useEffect(() => {
   //   console.log("Lobby useEffect ran")

@@ -62,17 +62,13 @@ io.on("connection", socket => {
     console.log("hello");
   });
   socket.on("round", async (gameID) => {
-
     const gameData = await Game.findOne({
       where: { id: gameID }
     })
     const formatData = await JSON.parse(JSON.stringify(gameData))
-    console.log(formatData)
     io.emit('receive-round', {
       formatData
     })
-    // res.status(200).json(formatData)
-    // .catch(err => console.log(err))
   })
 });
 httpServer.listen(3002);
