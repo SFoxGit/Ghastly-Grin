@@ -61,14 +61,19 @@ io.on("connection", socket => {
   socket.on("welcome", () => {
     console.log("hello");
   });
-  socket.on("round", async (gameID) => {
+
+  socket.on("round", async () => {
     const gameData = await Game.findOne({
       where: { id: gameID }
     })
     const formatData = await JSON.parse(JSON.stringify(gameData))
-    io.emit('receive-round', {
+    socket.broadcast.emit('receive-round', {
       formatData
     })
+  })
+
+  socket.on("lobbyJoin", async (gameID) => {
+
   })
 });
 httpServer.listen(3002);

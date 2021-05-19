@@ -61,14 +61,17 @@ function Lobby(props) {
         console.log()
       })
       .catch(err => console.log("round: " + err))
-  }
-
-  function testRound() {
     socket.emit('round', game)
   }
 
+  function testRound() {
+    socket.emit("round")
+  }
+
   useEffect(() => {
+    console.log("Lobby Use Effect")
     if (socket == null) return
+    console.log("socket present on lobby");
     socket.on('receive-round', function (roundData) {
       console.log(roundData.formatData.round)
       if (roundData.formatData.round > 0) {
@@ -79,7 +82,7 @@ function Lobby(props) {
       }
     })
 
-    return () => socket.off('receive-round')
+    // return () => socket.off('receive-round')
   }, [socket, history])
 
   // useEffect(() => {
