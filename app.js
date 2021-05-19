@@ -70,6 +70,9 @@ io.on("connection", socket => {
     socket.broadcast.emit('receive-round', {
       formatData
     })
+    socket.emit('receive-round', {
+      formatData
+    })
   })
 
   socket.on("lobbyJoin", async (gameID) => {

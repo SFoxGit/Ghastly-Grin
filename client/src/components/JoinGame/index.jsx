@@ -18,7 +18,7 @@ function JoinGame(props) {
       .then(res => {
         setGameID(res.data.game_id);
         setOwner(false);
-        socket.emit('round', gameID)
+        socket.emit('round', ID)
         history.push("/Lobby")
       }
       )
