@@ -3,12 +3,14 @@ import Lobby from "../Lobby";
 import { Route, useHistory } from 'react-router-dom';
 import axios from "axios";
 import "./style.css";
+import { useSocket } from '../../utils/SocketProvider';
 
 function JoinGame(props) {
   const setGameID = props.setGameID
   const setOwner = props.setOwner
   const history = useHistory();
   const gameID = useRef();
+  const socket = useSocket();
   const newPlayer = async (event) => {
     const ID = gameID.current.value
     event.preventDefault();
@@ -16,6 +18,7 @@ function JoinGame(props) {
       .then(res => {
         setGameID(res.data.game_id);
         setOwner(false);
+        socket.emit('round', gameID)
         history.push("/Lobby")
       }
       )
