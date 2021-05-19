@@ -73,17 +73,19 @@ function Lobby(props) {
     if (socket == null) return
     console.log("socket present on lobby");
     socket.on('receive-round', function (roundData) {
-      console.log(roundData.formatData.round)
+      console.log(roundData.formatData.game_owner)
+      setOwner(roundData.formatData.game_owner)
+      roundData.formatData.game_owner === user ? setOwner(true) : setOwner(false)
       if (roundData.formatData.round > 0) {
         axios.put('/api/player/hand', { withCredentials: true })
           .then(res => {
             history.push('/GamePlay')
           })
       }
+      return () => socket.off('receive-round')
     })
 
-    // return () => socket.off('receive-round')
-  }, [socket, history])
+  }, [socket, history, setOwner, user])
 
   // useEffect(() => {
   //   console.log("Lobby useEffect ran")
