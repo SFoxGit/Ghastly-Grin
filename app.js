@@ -67,11 +67,19 @@ io.on("connection", socket => {
       where: { id: gameID }
     })
     const formatData = await JSON.parse(JSON.stringify(gameData))
+    const playerLobby = await Player.findAll({
+      where: { game_id: gameID }
+    })
+    const lobby = await JSON.parse(JSON.stringify(playerLobby));
+    const playerNames = []
+    lobby.forEach(element => {
+      playerNames.push(element.username)
+    })
     socket.broadcast.emit('receive-round', {
-      formatData
+      formatData, playerNames
     })
     socket.emit('receive-round', {
-      formatData
+      formatData, playerNames
     })
   })
 
