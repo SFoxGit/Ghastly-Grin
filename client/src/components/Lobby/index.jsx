@@ -42,6 +42,7 @@ function Lobby(props) {
         console.log("set new whitecards")
       })
       .catch(err => console.log(err))
+      socket.emit('deck')
   }
 
   const addCard = async () => {
@@ -50,6 +51,7 @@ function Lobby(props) {
         newCard.current.value = ""
       })
       .catch(err => console.log(err));
+      socket.emit('deck')
   }
 
   const startGame = async () => {
@@ -64,27 +66,34 @@ function Lobby(props) {
     socket.emit('round', game)
   }
 
-  function testRound() {
-    socket.emit("round")
-  }
-
   useEffect(() => {
     console.log("Lobby Use Effect")
     if (socket == null) return
     console.log("socket present on lobby");
     socket.on('receive-round', function (roundData) {
-      console.log(roundData.formatData.round)
+      console.log(roundData);
+      console.log("received round");
+      roundData.formatData.game_owner === user ? setOwner(true) : setOwner(false);
+      setPlayers(roundData.playerNames)
       if (roundData.formatData.round > 0) {
         axios.put('/api/player/hand', { withCredentials: true })
           .then(res => {
             history.push('/GamePlay')
           })
+          .catch(err => console.log(err))
       }
     })
-
+    
     // return () => socket.off('receive-round')
-  }, [socket, history])
+  }, [socket, history, setOwner, user])
 
+  useEffect(() => {
+    if (socket == null) return
+    socket.on('receive-deck', function (deckData) {
+      setWhiteCards(deckData.deck.answers)
+      console.log('deck: ' + deckData.deck)
+    })
+  }, [socket])
   // useEffect(() => {
   //   console.log("Lobby useEffect ran")
   //   if (componentMounted) {
@@ -142,7 +151,6 @@ function Lobby(props) {
 
     <div className="lobby-page main-content">
       <div className="lobby-start">
-        <button onClick={() => testRound()}>Test</button>
         <h4 className="lob-h">Lobby: {game}</h4>
         {owner ?
           <form>

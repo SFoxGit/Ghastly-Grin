@@ -67,16 +67,33 @@ io.on("connection", socket => {
       where: { id: gameID }
     })
     const formatData = await JSON.parse(JSON.stringify(gameData))
+    const playerLobby = await Player.findAll({
+      where: { game_id: gameID }
+    })
+    const lobby = await JSON.parse(JSON.stringify(playerLobby));
+    const playerNames = []
+    lobby.forEach(element => {
+      playerNames.push(element.username)
+    })
     socket.broadcast.emit('receive-round', {
-      formatData
+      formatData, playerNames
     })
     socket.emit('receive-round', {
-      formatData
+      formatData, playerNames
     })
   })
 
-  socket.on("lobbyJoin", async (gameID) => {
-
+  socket.on("deck", async () => {
+    const deckData = await Deck.findOne({
+      where: { game_id: gameID }
+    });
+    const deck = await JSON.parse(JSON.stringify(deckData));
+    socket.broadcast.emit('receive-deck', {
+      deck
+    })
+    socket.emit('receive-deck', {
+      deck
+    })
   })
 });
 httpServer.listen(3002);
