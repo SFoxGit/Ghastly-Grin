@@ -83,8 +83,17 @@ io.on("connection", socket => {
     })
   })
 
-  socket.on("lobbyJoin", async (gameID) => {
-
+  socket.on("deck", async () => {
+    const deckData = await Deck.findOne({
+      where: { game_id: gameID }
+    });
+    const deck = await JSON.parse(JSON.stringify(deckData));
+    socket.broadcast.emit('receive-deck', {
+      deck
+    })
+    socket.emit('receive-deck', {
+      deck
+    })
   })
 });
 httpServer.listen(3002);

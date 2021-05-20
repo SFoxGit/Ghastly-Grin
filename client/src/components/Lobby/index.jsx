@@ -42,6 +42,7 @@ function Lobby(props) {
         console.log("set new whitecards")
       })
       .catch(err => console.log(err))
+      socket.emit('deck')
   }
 
   const addCard = async () => {
@@ -50,6 +51,7 @@ function Lobby(props) {
         newCard.current.value = ""
       })
       .catch(err => console.log(err));
+      socket.emit('deck')
   }
 
   const startGame = async () => {
@@ -80,11 +82,18 @@ function Lobby(props) {
           })
           .catch(err => console.log(err))
       }
-      // return () => socket.off('receive-round')
     })
-
+    
+    // return () => socket.off('receive-round')
   }, [socket, history, setOwner, user])
 
+  useEffect(() => {
+    if (socket == null) return
+    socket.on('receive-deck', function (deckData) {
+      setWhiteCards(deckData.deck.answers)
+      console.log('deck: ' + deckData.deck)
+    })
+  }, [socket])
   // useEffect(() => {
   //   console.log("Lobby useEffect ran")
   //   if (componentMounted) {
