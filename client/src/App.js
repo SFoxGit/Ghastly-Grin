@@ -121,6 +121,8 @@ function App() {
               {loggedIn ? (<><CreateGame
                 setOwner={setOwner}
                 setGameID={setGameID}
+                setTimer={setTimer}
+                setMaxRounds={setMaxRounds}
 
               />
                 <JoinGame
