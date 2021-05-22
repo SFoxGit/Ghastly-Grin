@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
     const playerFormat = await JSON.parse(JSON.stringify(playerFind))
     req.session.game_id = gameFormat.id;
     req.session.player_id = playerFormat.id;
-    res.status(200).json(gameFormat)
+    res.status(200).json({game: gameFormat, user: formatUser.username})
 
   } catch (err) {
     res.status(400).json(err);

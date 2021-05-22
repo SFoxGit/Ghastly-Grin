@@ -123,6 +123,7 @@ function App() {
                 setGameID={setGameID}
                 setTimer={setTimer}
                 setMaxRounds={setMaxRounds}
+                setPlayers={setPlayers}
 
               />
                 <JoinGame
@@ -148,6 +149,7 @@ function App() {
                   setMaxRounds={setMaxRounds}
                   setRounds={setRounds}
                   stopTime={stopTime}
+                  players={players}
                 />
                 : <LogSign setUserID={setUserID} setLoggedIn={setLoggedIn} setGameID={setGameID} />}
             </Route>
