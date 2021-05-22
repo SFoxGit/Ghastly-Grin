@@ -72,7 +72,7 @@ io.on("connection", socket => {
     })
     const lobby = await JSON.parse(JSON.stringify(playerLobby));
     const playerNames = []
-    lobby.forEach(element => {
+    await lobby.forEach(element => {
       playerNames.push(element.username)
     })
     socket.broadcast.emit('receive-round', {
