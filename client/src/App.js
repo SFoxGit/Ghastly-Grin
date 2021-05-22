@@ -35,6 +35,7 @@ function App() {
   useEffect(() => {
     axios.get('/api/user')
       .then(res => {
+        console.log("setting game ID: " + res.data.game_id)
         setUserID(res.data.user_id)
         setLoggedIn(res.data.loggedIn)
         if (res.data.game_id !== null) {
@@ -150,6 +151,8 @@ function App() {
                   setRounds={setRounds}
                   stopTime={stopTime}
                   players={players}
+                  rounds={rounds}
+                  setPlayers={setPlayers}
                 />
                 : <LogSign setUserID={setUserID} setLoggedIn={setLoggedIn} setGameID={setGameID} />}
             </Route>

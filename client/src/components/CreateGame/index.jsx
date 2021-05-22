@@ -22,7 +22,7 @@ function CreateGame(props) {
       .then(async res => {
         console.log("res.data: " + res.data.user)
         await setOwner(true);
-        await setGameID(res.data.game.game_id)
+        await setGameID(res.data.game.id)
         await setMaxRounds(res.data.game.maxrounds)
         await setTimer(res.data.game.timer)
         await setPlayers([res.data.user])
