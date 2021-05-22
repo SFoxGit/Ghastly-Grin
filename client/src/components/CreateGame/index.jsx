@@ -14,16 +14,18 @@ function CreateGame(props) {
   // const socket = useSocket();
   const setMaxRounds = props.setMaxRounds;
   const setTimer = props.setTimer;
+  const setPlayers = props.setPlayers;
 
   const newGame = async (event) => {
     event.preventDefault();
     axios.post('/api/game', { test: "test" }, { withCredentials: true })
       .then(async res => {
+        console.log("res.data: " + res.data.user)
         await setOwner(true);
-        await setGameID(res.data.game_id)
-        console.log("res.data: " + res.data)
-        await setMaxRounds(res.data.maxrounds)
-        await setTimer(res.data.timer)
+        await setGameID(res.data.game.game_id)
+        await setMaxRounds(res.data.game.maxrounds)
+        await setTimer(res.data.game.timer)
+        await setPlayers([res.data.user])
         history.push("/Lobby")
       })
       .catch(err => console.log(err))

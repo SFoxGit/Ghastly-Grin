@@ -6,7 +6,6 @@ import { useSocket } from '../../utils/SocketProvider';
 
 function Lobby(props) {
   const history = useHistory();
-  const [players, setPlayers] = useState([]);
   const [whiteCards, setWhiteCards] = useState([]);
   const timer = props.timer;
   const setTimer = props.setTimer;
@@ -17,6 +16,8 @@ function Lobby(props) {
   const setRounds = props.setRounds
   const maxRounds = props.maxRounds;
   const setMaxRounds = props.setMaxRounds;
+  const players = props.players;
+  const setPlayers = props.setPlayers;
   const numRounds = useRef();
   const timerCount = useRef();
   const cohortPack = useRef();
@@ -76,8 +77,8 @@ function Lobby(props) {
       setRounds(roundData.formatData.round);
       setMaxRounds(roundData.formatData.maxrounds);
       setTimer(roundData.formatData.timer);
-      roundData.formatData.game_owner === user ? setOwner(true) : setOwner(false);
       setPlayers(roundData.playerNames)
+      roundData.formatData.game_owner === user ? setOwner(true) : setOwner(false);
       if (roundData.formatData.round > 0) {
         axios.put('/api/player/hand', { withCredentials: true })
           .then(res => {
@@ -88,7 +89,7 @@ function Lobby(props) {
     })
 
     // return () => socket.off('receive-round')
-  }, [socket, history, setOwner, user, setRounds, setMaxRounds, setTimer])
+  }, [socket, history, setOwner, user, setRounds, setMaxRounds, setTimer, setPlayers])
 
   useEffect(() => {
     console.log('deck use effect')
