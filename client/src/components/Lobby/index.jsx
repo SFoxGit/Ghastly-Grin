@@ -22,8 +22,8 @@ function Lobby(props) {
   const cohortPack = useRef();
   const cahPack = useRef();
   const newCard = useRef();
-  const [componentMounted, setComponentMounted] = useState(true);
-  const stopTime = props.stopTime;
+  // const [componentMounted, setComponentMounted] = useState(true);
+  // const stopTime = props.stopTime;
   const socket = useSocket();
 
   const updateGame = async (e) => {
@@ -42,7 +42,7 @@ function Lobby(props) {
         console.log("set new whitecards")
       })
       .catch(err => console.log(err))
-      socket.emit('deck')
+    socket.emit('deck')
   }
 
   const addCard = async () => {
@@ -51,7 +51,7 @@ function Lobby(props) {
         newCard.current.value = ""
       })
       .catch(err => console.log(err));
-      socket.emit('deck')
+    socket.emit('deck')
   }
 
   const startGame = async () => {
@@ -73,6 +73,9 @@ function Lobby(props) {
     socket.on('receive-round', function (roundData) {
       console.log(roundData);
       console.log("received round");
+      setRounds(roundData.formatData.round);
+      setMaxRounds(roundData.formatData.maxrounds);
+      setTimer(roundData.formatData.timer);
       roundData.formatData.game_owner === user ? setOwner(true) : setOwner(false);
       setPlayers(roundData.playerNames)
       if (roundData.formatData.round > 0) {
@@ -83,11 +86,17 @@ function Lobby(props) {
           .catch(err => console.log(err))
       }
     })
-    
+
     // return () => socket.off('receive-round')
-  }, [socket, history, setOwner, user])
+  }, [socket, history, setOwner, user, setRounds, setMaxRounds, setTimer])
 
   useEffect(() => {
+    console.log('deck use effect')
+    axios.get('/api/deck', { withCredentials: true })
+      .then(res => {
+        setWhiteCards(res.data.answers)
+      })
+      .catch(err => console.log(err))
     if (socket == null) return
     socket.on('receive-deck', function (deckData) {
       setWhiteCards(deckData.deck.answers)
