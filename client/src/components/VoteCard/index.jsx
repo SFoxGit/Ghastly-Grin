@@ -21,7 +21,6 @@ function VoteCard(props) {
   const [componentMounted, setComponentMounted] = useState(true)
 
   const timer = useCallback((endTime) => {
-    console.log("Vote Card Timer Run")
     var timerInterval = setInterval(action, 1000)
     function stopTimer() {
       clearInterval(timerInterval)
@@ -68,7 +67,6 @@ function VoteCard(props) {
   }
 
   useEffect(() => {
-    console.log("Vote Card Use Effect Ran Once");
     if (componentMounted) {
       axios.get('/api/round', { withCredentials: true })
         .then(res => {
