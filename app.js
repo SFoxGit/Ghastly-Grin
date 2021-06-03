@@ -57,10 +57,6 @@ app.get("*", function (req, res) {
 io.on("connection", socket => {
   const gameID = socket.handshake.query.gameID;
   socket.join(gameID)
-  console.log("game ID: " + gameID)
-  socket.on("welcome", () => {
-    console.log("hello");
-  });
 
   socket.on("round", async () => {
     const gameData = await Game.findOne({
