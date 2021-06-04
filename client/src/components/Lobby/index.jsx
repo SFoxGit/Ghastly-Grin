@@ -38,7 +38,6 @@ function Lobby(props) {
   }
 
   const removeCard = async (e) => {
-    console.log(e.target.innerHTML);
     await axios.put('/api/deck/del', { card: e.target.innerHTML }, { withCredentials: true })
       .then(res => {
         console.log("set new whitecards")
@@ -69,12 +68,8 @@ function Lobby(props) {
   }
 
   useEffect(() => {
-    console.log("Lobby Use Effect")
     if (socket == null) return
-    console.log("socket present on lobby");
     socket.on('receive-round', function (roundData) {
-      console.log(roundData);
-      console.log("received round");
       setRounds(roundData.formatData.round);
       setMaxRounds(roundData.formatData.maxrounds);
       setTimer(roundData.formatData.timer);
@@ -93,7 +88,6 @@ function Lobby(props) {
   }, [socket, history, setOwner, user, setRounds, setMaxRounds, setTimer, setPlayers])
 
   useEffect(() => {
-    console.log('deck use effect')
     axios.get('/api/deck', { withCredentials: true })
       .then(res => {
         setWhiteCards(res.data.answers)
@@ -102,7 +96,6 @@ function Lobby(props) {
     if (socket == null) return
     socket.on('receive-deck', function (deckData) {
       setWhiteCards(deckData.deck.answers)
-      console.log('deck: ' + deckData.deck)
     })
   }, [socket])
 

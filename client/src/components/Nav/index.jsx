@@ -13,7 +13,6 @@ function Nav(props) {
   const logOut = () => {
     axios.post('/api/user/logout', { withCredentials: true })
       .then(() => {
-        console.log("Logged Out")
         setLoggedIn(false)
         history.push('/')
       })

@@ -21,26 +21,7 @@ function JoinGame(props) {
       )
       .catch(err => console.log(err))
   }
-  // useEffect(() => {
-  //   console.log("Lobby Use Effect")
-  //   if (socket == null) return
-  //   console.log("socket present on lobby");
-  //   socket.on('receive-round', function (roundData) {
-  //     console.log(roundData);
-  //     console.log("received round");
-  //     setPlayers(roundData.playerNames)
-  //     roundData.formatData.game_owner === user ? setOwner(true) : setOwner(false);
-  //     if (roundData.formatData.round > 0) {
-  //       axios.put('/api/player/hand', { withCredentials: true })
-  //         .then(res => {
-  //           history.push('/GamePlay')
-  //         })
-  //         .catch(err => console.log(err))
-  //     }
-  //   })
-
-  //   // return () => socket.off('receive-round')
-  // }, [socket, history, setOwner, user, setRounds, setMaxRounds, setTimer, setPlayers])
+  
   return (
     <form>
       <div className="form-group">

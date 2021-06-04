@@ -80,7 +80,6 @@ router.put("/", withAuth, async (req, res) => {
         }
       }
     );
-    console.log(usersAnswers);
     if (!updateAnswers) {
       res.status(404).json({ message: 'No round found with this id!' });
       return;

@@ -20,13 +20,10 @@ function LogSign(props) {
     if (email && password) {
       await axios.post('/api/user/login', { email, password }, { withCredentials: true })
         .then(res => {
-          console.log(res.data)
           setUserID(res.data.user_id)
           setGameID(res.data.game_id)
           setLoggedIn(true);
           history.push('/')
-          // document.location.replace('/')
-          // console.log("testpass")
         })
         .catch(err => console.log(err))
 
@@ -49,8 +46,6 @@ function LogSign(props) {
           setUserID(res.data.user_id)
           setLoggedIn(true);
           history.push('/CreateGame');
-          // document.location.replace('/')
-          // console.log("testpass")
         })
         .catch(err => console.log(err))
     }
