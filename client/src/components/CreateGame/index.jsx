@@ -20,7 +20,6 @@ function CreateGame(props) {
     event.preventDefault();
     axios.post('/api/game', { test: "test" }, { withCredentials: true })
       .then(async res => {
-        console.log("res.data: " + res.data.user)
         await setOwner(true);
         await setGameID(res.data.game.id)
         await setMaxRounds(res.data.game.maxrounds)

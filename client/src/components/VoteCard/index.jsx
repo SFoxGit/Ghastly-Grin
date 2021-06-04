@@ -36,7 +36,6 @@ function VoteCard(props) {
               .then(res => {
                 axios.post('/api/round/', { user: players }, { withCredentials: true })
                   .then(res => {
-                    console.log("id and owner yes match")
                     stopTimer();
                     history.push('/GamePlay')
                   })

@@ -10,7 +10,6 @@ function EndGame() {
     axios.get('/api/player', { withCredentials: true })
       .then(async res => {
         const playerData = res.data.data;
-        console.log(playerData)
         for (let element of playerData) {
           const { data } = await axios.get(`/api/user/${element.user_id}`, { withCredentials: true });
           setPlayers(players => [...players, { name: data.username, score: element.score }])
