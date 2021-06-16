@@ -31,6 +31,7 @@ function App() {
   const [blackCard, setBlackCard] = useState([]);
   const [hand, setHand] = useState([]);
   const [stopTime, setStopTime] = useState(false);
+  const [answers, setAnswers] = useState([])
 
   useEffect(() => {
     axios.get('/api/user')
@@ -170,6 +171,7 @@ function App() {
                   setHand={setHand}
                   setPlayers={setPlayers}
                   setRounds={setRounds}
+                  setAnswers={setAnswers}
 
                 /> : <Homepage />}
             </Route>
@@ -184,7 +186,7 @@ function App() {
                 setRounds={setRounds}
                 maxRounds={maxRounds}
                 players={players}
-
+                setAnswers={setAnswers}
               />
             </Route>
             <Route exact path="/EndGame">
